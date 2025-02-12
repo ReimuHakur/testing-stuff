@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <style>
+        body {
+            background: repeating-linear-gradient(
+                45deg,
+                #FFD8DB,
+                #FFD8DB 12px,
+                #FFD1DC 12px,
+                #FFD1DC 24px
+            );
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+        h1 {
+            color: white;
+            font-size: 3em;
+            margin: 50px 0;
+            text-shadow: 
+                -1px -1px 0 darkmagenta,  
+                1px -1px 0 darkmagenta,
+                -1px 1px 0 darkmagenta,
+                1px 1px 0 darkmagenta;
+        }
+        .button-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 0 100px; /* x value = 100px */
+        }
+        .button-container {
+            display: flex;
+            gap: 40px; /* y value = 40px */
+        }
+        .button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border: 2px solid #FF69B4;
+            border-radius: 10px;
+            background-color: white;
+            color: #FF69B4;
+            transition: all 0.2s;
+        }
+        #yesButton:hover {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #45a049;
+        }
+        #message {
+            margin-top: 30px;
+            font-size: 1.5em;
+            color: #ffffff;
+            text-align: center;
+        }
+        .heart-gif {
+            margin-top: 20px;
+            display: none;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Will You Be My Valentine?</h1>
+    <div class="button-wrapper">
+        <div class="button-container">
+            <button id="yesButton" class="button" onclick="showMessage()">Yes</button>
+            <button id="noButton" class="button">No</button>
+        </div>
+    </div>
+    <div id="message"></div>
+    <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcm96bHhlZ3Myc3J1dHFwcGxnd2hsaXMxbmZ6YnEwcjVvOWdndWNseiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IzXiddo2twMmdmU8Lv/giphy.gif" class="heart-gif" alt="Hearts">
+
+    <script>
+        const noButton = document.getElementById('noButton');
+        const yesButton = document.getElementById('yesButton');
+        const minMoveDistance = 300; // Minimum distance the No button must move
+        const triggerDistance = 150; // Distance from mouse to trigger No button movement
+        let lastX = 0, lastY = 0;
+
+        // Move No button when mouse gets close
+        function moveNoButton(event) {
+            const rect = noButton.getBoundingClientRect();
+            const mouseX = event.clientX;
+            const mouseY = event.clientY;
+
+            // Calculate distance from mouse to No button's center
+            const distance = Math.hypot(
+                mouseX - (rect.left + rect.width / 2),
+                mouseY - (rect.top + rect.height / 2)
+            );
+
+            // Move the No button if the mouse gets too close
+            if (distance < triggerDistance) {
+                let newX, newY;
+                const buffer = 50; // Buffer to keep No button within viewport
+
+                do {
+                    // Generate new random positions
+                    newX = Math.random() * (window.innerWidth - rect.width - 2 * buffer) + buffer;
+                    newY = Math.random() * (window.innerHeight - rect.height - 2 * buffer) + buffer;
+                } while (
+                    Math.abs(newX - lastX) < minMoveDistance || // Ensure at least 100px horizontal movement
+                    Math.abs(newY - lastY) < minMoveDistance    // Ensure at least 100px vertical movement
+                );
+
+                // Update button position
+                noButton.style.position = 'fixed';
+                noButton.style.left = `${newX}px`;
+                noButton.style.top = `${newY}px`;
+                lastX = newX;
+                lastY = newY;
+            }
+        }
+
+        // Display message and GIF when Yes button is clicked
+        function showMessage() {
+            document.getElementById('message').innerHTML = "I knew you'd say yes! Happy Valentine ❤️";
+            document.querySelector('.heart-gif').style.display = 'block';
+        }
+
+        // Initialize event listeners
+        window.addEventListener('mousemove', moveNoButton);
+    </script>
+</body>
+</html>
